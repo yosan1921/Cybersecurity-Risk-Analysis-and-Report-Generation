@@ -1,0 +1,578 @@
+{
+    "questionnaireName": "INSA Cyber Security Risk Assessment Checklist",
+    "description": "Information Network Security Administration (INSA) - Operational-level cyber security risk assessment questionnaire prepared by Cyber Security Risk Management Division, March 2024",
+    "sections": [
+        {
+            "sectionTitle": "Physical Security Controls",
+            "questions": [
+                {
+                    "questionText": "Are all data center entry points protected by controlled access systems?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is CCTV installed to cover all critical areas and are video recordings retained as per policy?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are biometric or smart card authentication systems used for personnel access?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are visitor entries and exits logged, monitored and reviewed regularly?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are fire detection, suppression and environmental controls (temperature, humidity, smoke) in place and tested periodically?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are reliable backup power systems, such as UPS and generators, in place and tested regularly?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Network and Infrastructure Security",
+            "questions": [
+                {
+                    "questionText": "Is the network properly segmented to isolate critical systems from non-critical systems?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are firewall configurations defined, documented and reviewed regularly?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are intrusion detection and prevention systems (IDS/IPS) deployed and actively monitored?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is remote administrative access restricted through secure VPN connections with strong authentication?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is network traffic continuously monitored and logs regularly reviewed for anomalies?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are routers, switches and servers regularly updated and patched according to policy?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Server and Storage Security",
+            "questions": [
+                {
+                    "questionText": "Are all server operating systems hardened and configured based on approved security baselines?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are virtualization platforms securely configured and regularly reviewed for vulnerabilities?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is data encrypted both at rest and in transit using approved cryptographic standards?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are strong authentication and authorization mechanisms implemented for server and storage access?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is a tested and documented backup and recovery strategy in place for all critical systems?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are endpoint protection and antivirus tools deployed, updated and monitored on all servers?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Access Management",
+            "questions": [
+                {
+                    "questionText": "Is role-based access control (RBAC) implemented for all users and systems?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are privileged accounts managed through a dedicated privileged access management (PAM) process or tool?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is multi-factor authentication (MFA) enforced for administrators and remote users?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are user accounts and access rights reviewed periodically to ensure least privilege?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are access logs maintained, monitored and audited for suspicious activities?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are there defined procedures for onboarding, modifying and removing user access?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Data Protection and Privacy",
+            "questions": [
+                {
+                    "questionText": "Is organizational data classified and labeled according to sensitivity levels?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are secure data handling and storage procedures implemented for each classification level?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is there a defined process for secure data disposal and sanitization of media?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are encryption and access controls applied to protect sensitive and personal data?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Does the organization comply with applicable data protection and privacy regulations?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are data transfers to external parties or systems monitored and controlled?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Application and Software Security",
+            "questions": [
+                {
+                    "questionText": "Are applications deployed using secure configuration standards?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are regular vulnerability scans and security tests performed on all hosted applications?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are software updates and security patches applied promptly after release?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are third-party and open-source software components reviewed for security risks before deployment?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are APIs secured with authentication, authorization and encryption controls?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are web applications protected against common threats such as SQL injection and cross-site scripting (XSS)?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Configuration Management",
+            "questions": [
+                {
+                    "questionText": "Are all critical systems and devices configured according to approved security baselines?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are changes to system configurations documented, reviewed and approved before implementation?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are configuration changes monitored to detect unauthorized or unintended modifications?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are periodic configuration audits conducted to ensure compliance with organizational policies and standards?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are backup copies of critical configuration files maintained and tested for restoration?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Incident Detection and Response",
+            "questions": [
+                {
+                    "questionText": "Is a Security Information and Event Management (SIEM) system implemented for real-time monitoring and alerting?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is there a documented incident response plan outlining roles, responsibilities and escalation procedures?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are incident response procedures regularly tested through simulations or tabletop exercises?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are incidents logged, analyzed and reviewed to improve future response?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are personnel trained and aware of how to report and handle cybersecurity incidents?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is forensic readiness maintained through proper log retention and evidence collection procedures?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Business Continuity and Disaster Recovery",
+            "questions": [
+                {
+                    "questionText": "Are backup systems and data replication processes implemented for all critical services?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are recovery sites or alternative data centers available and tested regularly?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are RTO (Recovery Time Objective) and RPO (Recovery Point Objective) clearly defined and met during tests?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are backup restoration procedures tested periodically to ensure data integrity?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are key personnel trained on emergency response and recovery procedures?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        },
+        {
+            "sectionTitle": "Third-Party and Outsourced Service Risks",
+            "questions": [
+                {
+                    "questionText": "Are third-party service providers assessed for cybersecurity posture before engagement?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Do contracts and SLAs with vendors include specific cybersecurity and data protection requirements?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are third-party systems and services continuously monitored for compliance with security standards?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are vendors required to report incidents that may affect the organization's data or systems?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Is there a process for reviewing and renewing vendor risk assessments periodically?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                },
+                {
+                    "questionText": "Are outsourced services integrated into the organization's incident response and continuity plans?",
+                    "options": [
+                        "Yes",
+                        "No",
+                        "Partially Implemented",
+                        "Not Applicable"
+                    ]
+                }
+            ]
+        }
+    ]
+}
