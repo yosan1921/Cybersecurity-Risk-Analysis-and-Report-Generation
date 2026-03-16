@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { AnalysisService } from "@/services/updateanalysisService";
 
 export async function PATCH(request: Request) {
   try {
+    // Add authentication check
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
 
     const {
@@ -19,9 +26,47 @@ export async function PATCH(request: Request) {
       impactDescription,
     } = body;
 
+    // Enhanced validation
     if (!analysisId || !level || typeof questionId !== "number") {
       return NextResponse.json(
         { error: "analysisId, level and questionId are required" },
+        { status: 400 }
+      );
+    }
+
+    // Validate likelihood and impact ranges
+    if (likelihood !== undefined && (likelihood < 1 || likelihood > 5 || !Number.isInteger(likelihood))) {
+      return NextResponse.json(
+        { error: "Likelihood must be an integer between 1 and 5" },
+        { status: 400 }
+      );
+    }
+
+    if (impact !== undefined && (impact < 1 || impact > 5 || !Number.isInteger(impact))) {
+      return NextResponse.json(
+        { error: "Impact must be an integer between 1 and 5" },
+        { status: 400 }
+      );
+    }
+
+    // Validate text field lengths
+    if (gap && gap.length > 500) {
+      return NextResponse.json(
+        { error: "Gap description must be less than 500 characters" },
+        { status: 400 }
+      );
+    }
+
+    if (threat && threat.length > 500) {
+      return NextResponse.json(
+        { error: "Threat description must be less than 500 characters" },
+        { status: 400 }
+      );
+    }
+
+    if (mitigation && mitigation.length > 500) {
+      return NextResponse.json(
+        { error: "Mitigation description must be less than 500 characters" },
         { status: 400 }
       );
     }

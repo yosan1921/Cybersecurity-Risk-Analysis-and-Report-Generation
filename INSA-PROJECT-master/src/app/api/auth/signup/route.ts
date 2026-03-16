@@ -7,9 +7,34 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password, role, name } = await req.json();
 
+    // Add input validation
     if (!email || !password || !role) {
       return NextResponse.json(
         { error: "Email, password, and role are required" },
+        { status: 400 }
+      );
+    }
+
+    // Enhanced password validation
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters long" },
+        { status: 400 }
+      );
+    }
+
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      return NextResponse.json(
+        { error: "Password must contain at least one uppercase letter, one lowercase letter, and one number" },
+        { status: 400 }
+      );
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
         { status: 400 }
       );
     }

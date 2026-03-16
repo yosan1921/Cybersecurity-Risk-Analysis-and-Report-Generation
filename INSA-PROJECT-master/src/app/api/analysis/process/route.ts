@@ -6,8 +6,32 @@ import { performRiskAnalysis } from "@/services/riskAnalyzer";
 
 export async function POST(request: Request) {
   try {
+    // Add debugging for request body
+    const contentType = request.headers.get('content-type');
+    console.log('Content-Type:', contentType);
 
-    const { questionnaireId } = await request.json();
+    let body;
+    try {
+      const rawBody = await request.text();
+      console.log('Raw request body:', rawBody);
+
+      if (!rawBody || rawBody.trim() === '') {
+        return NextResponse.json({
+          success: false,
+          error: "Request body is empty"
+        }, { status: 400 });
+      }
+
+      body = JSON.parse(rawBody);
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError);
+      return NextResponse.json({
+        success: false,
+        error: `Invalid JSON format: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}`
+      }, { status: 400 });
+    }
+
+    const { questionnaireId } = body;
 
     if (!questionnaireId) {
       return NextResponse.json({

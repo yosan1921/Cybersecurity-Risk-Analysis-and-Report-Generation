@@ -13,10 +13,10 @@ export async function middleware(request: NextRequest) {
     // Enforce HTTPS
     response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-    // Content Security Policy
+    // Content Security Policy - Fixed to remove unsafe directives
     response.headers.set(
         'Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
     );
 
     // Prevent clickjacking
@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
     response.headers.delete('X-Powered-By');
 
     // Add request ID for tracking
-    const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const requestId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     response.headers.set('X-Request-ID', requestId);
 
     // Protect API routes

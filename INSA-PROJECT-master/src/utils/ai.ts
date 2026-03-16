@@ -289,6 +289,7 @@ Evaluate the security posture and provide risk assessment in the exact format sp
 
   try {
     console.log(`[AI Analysis] Analyzing: ${question.question.substring(0, 50)}...`);
+    console.log(`[AI Analysis] Using API key: ${openRouter ? 'Present' : 'Missing'}`);
 
     const completion = await openRouter.chat.send({
       model: 'openai/gpt-4o-mini',
@@ -300,36 +301,33 @@ Evaluate the security posture and provide risk assessment in the exact format sp
       maxTokens: 500,
     });
 
-    // Extract response content safely from OpenRouter completion
-    const anyCompletion: any = completion;
-    const choice = anyCompletion?.choices?.[0] ?? anyCompletion?.choice ?? null;
-    const raw = choice?.message?.content ?? choice?.text ?? anyCompletion?.text ?? null;
+    console.log(`[AI Analysis] Raw completion response:`, JSON.stringify(completion, null, 2));
 
-    let responseText = '';
-    if (!raw) {
-      responseText = '';
-    } else if (typeof raw === 'string') {
-      responseText = raw;
-    } else if (Array.isArray(raw)) {
-      responseText = raw.map((r: any) => (typeof r === 'string' ? r : r.text || '')).join('\n');
-    } else if (typeof raw === 'object') {
-      responseText = raw.text || JSON.stringify(raw);
-    } else {
-      responseText = String(raw);
+    // Extract response content - OpenRouter returns standard OpenAI format
+    const content = completion?.choices?.[0]?.message?.content;
+
+    console.log(`[AI Analysis] Extracted content:`, content);
+
+    if (!content) {
+      console.log(`[AI Analysis] No content found in response`);
+      throw new Error('No content returned from AI API');
     }
 
+    console.log(`[AI Analysis] Final response text:`, content);
+
     // Parse response
-    const parsed = parseAIResponse(responseText || '');
+    const parsed = parseAIResponse(content);
+    console.log(`[AI Analysis] Parsed result:`, parsed);
 
     // Ensure all required fields are present
     const result: RiskAnalysisResult = {
       likelihood: parsed.likelihood || 3,
       impact: parsed.impact || 3,
-      gap: parsed.gap || 'Analysis error occurred',
-      threat: parsed.threat || 'Unable to analyze threat',
-      mitigation: parsed.mitigation || 'Manual review required',
-      impactDescription: parsed.impactDescription || 'Impact assessment requires manual review',
-      riskScore: parsed.riskScore || calculateRiskScore(3, 3),
+      gap: parsed.gap || 'Analysis completed but gap not specified',
+      threat: parsed.threat || 'Analysis completed but threat not specified',
+      mitigation: parsed.mitigation || 'Analysis completed but mitigation not specified',
+      impactDescription: parsed.impactDescription || 'Analysis completed but impact description not specified',
+      riskScore: parsed.riskScore || calculateRiskScore(parsed.likelihood || 3, parsed.impact || 3),
       riskLevel: parsed.riskLevel || 'MEDIUM',
       riskColor: parsed.riskColor || RISK_MATRIX_CONFIG.riskLevels.MEDIUM.color,
       riskLabel: parsed.riskLabel || RISK_MATRIX_CONFIG.riskLevels.MEDIUM.label,
