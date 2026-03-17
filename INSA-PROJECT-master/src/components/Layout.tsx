@@ -15,10 +15,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: "Dashboard", href: "/dashboard" },
     { name: "Assessment", href: "/questionnaires" },
     { name: "Risk Analysis", href: "/risk-analysis" },
-    { name: "Risk evaluation", href: "/risk-evaluation" },
+    { name: "Risk Evaluation", href: "/risk-evaluation" },
     { name: "Risk Treatment", href: "/risk-treatment" },
-    { name: "Report&Documentation", href: "/reports" },
+    { name: "Reports & Docs", href: "/reports" },
     { name: "Risk Register", href: "/risks" },
+    { name: "Incidents", href: "/incidents" },
+    { name: "Awareness", href: "/awareness" },
+    { name: "Team Chat", href: "/chat" },
+    { name: "Audit Logs", href: "/audit" },
+    { name: "My Profile", href: "/profile" },
   ];
 
   return (

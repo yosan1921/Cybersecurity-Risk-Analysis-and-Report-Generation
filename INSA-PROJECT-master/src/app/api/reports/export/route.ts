@@ -1,53 +1,86 @@
-import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
-import { generateDocxReport } from "@/services/reportService";
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import dbConnect from "@/lib/mongodb";
+import RiskAnalysis from "@/models/RiskAnalysis";
+import { generateReport, getAvailableFormats } from "@/services/reportingService";
 
-export async function GET(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    // Get query parameters
-    const { searchParams } = new URL(request.url);
-    const analysisId = searchParams.get("analysisId");
-    const format = searchParams.get("format");
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    // Validate parameters
-    if (!analysisId) {
+    const { analysisId, format } = await req.json();
+
+    if (!analysisId || !format) {
       return NextResponse.json(
-        { error: "Missing analysisId parameter" },
+        { error: "Analysis ID and format are required" },
         { status: 400 }
       );
     }
 
-    if (!format || format.toUpperCase() !== "DOCX") {
+    const availableFormats = getAvailableFormats();
+    if (!availableFormats.includes(format)) {
       return NextResponse.json(
-        { error: "Only DOCX format is supported currently" },
+        { error: `Invalid format. Available formats: ${availableFormats.join(', ')}` },
         { status: 400 }
       );
     }
 
-    // Optional: Check authentication (uncomment if needed)
-    // const session = await getSession();
-    // if (!session) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+    await dbConnect();
 
-    // Generate DOCX report
-    const buffer = await generateDocxReport(analysisId);
+    const analysis = await RiskAnalysis.findById(analysisId);
+    if (!analysis) {
+      return NextResponse.json(
+        { error: "Analysis not found" },
+        { status: 404 }
+      );
+    }
 
-    // Return as file download
-    return new NextResponse(buffer, {
+    const report = await generateReport(analysis, {
+      format,
+      includeExecutiveSummary: true,
+      includeDetailedFindings: true,
+      includeRecommendations: true,
+      includeCharts: true
+    });
+
+    return new NextResponse(report.buffer, {
       status: 200,
       headers: {
-        "Content-Type":
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "Content-Disposition": `attachment; filename="risk-assessment-report-${analysisId}.docx"`,
-        "Cache-Control": "no-store",
+        'Content-Type': report.mimeType,
+        'Content-Disposition': `attachment; filename="${report.filename}"`,
+        'Content-Length': report.buffer.length.toString(),
       },
     });
   } catch (error) {
-    console.error("Error in reports/export route:", error);
-    const message = error instanceof Error ? error.message : String(error);
+    console.error("Report generation error:", error);
+    const message = error instanceof Error ? error.message : 'Failed to generate report';
     return NextResponse.json(
-      { error: message || "Failed to generate report" },
+      { error: message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const availableFormats = getAvailableFormats();
+    return NextResponse.json({
+      success: true,
+      availableFormats
+    });
+  } catch (error) {
+    console.error("Error fetching available formats:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch available formats" },
       { status: 500 }
     );
   }

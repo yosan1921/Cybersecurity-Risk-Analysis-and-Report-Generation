@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-// Note: ExcelReportService not yet implemented
-// import { ExcelReportService } from "@/services/excelReportService";
+import dbConnect from "@/lib/mongodb";
+import RiskAnalysis from "@/models/RiskAnalysis";
+import { generateExcelReport } from "@/services/excelReportService";
 
 export async function POST(request: Request) {
   try {
@@ -18,36 +19,38 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body = await request.json();
-    const { batchId } = body;
+    const { analysisId } = body;
 
     // Validate input
-    if (!batchId) {
+    if (!analysisId) {
       return NextResponse.json(
-        { success: false, error: "batchId is required" },
+        { success: false, error: "analysisId is required" },
         { status: 400 }
       );
     }
 
-    // TODO: Implement ExcelReportService
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Excel report generation not yet implemented",
-      },
-      { status: 501 }
-    );
+    await dbConnect();
+
+    // Get the risk analysis
+    const analysis = await RiskAnalysis.findById(analysisId);
+    if (!analysis) {
+      return NextResponse.json(
+        { success: false, error: "Analysis not found" },
+        { status: 404 }
+      );
+    }
 
     // Generate Excel report
-    // const excelBuffer = await ExcelReportService.generateBatchReport(batchId);
+    const excelBuffer = await generateExcelReport(analysis);
 
     // Return Excel file
-    // return new NextResponse(excelBuffer, {
-    //   headers: {
-    //     "Content-Type":
-    //       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    //     "Content-Disposition": `attachment; filename="batch-${batchId}-${new Date().toISOString().split("T")[0]}.xlsx"`,
-    //   },
-    // });
+    return new NextResponse(new Uint8Array(excelBuffer), {
+      headers: {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename="Risk_Analysis_${analysis.company}_${new Date().toISOString().split("T")[0]}.xlsx"`,
+        "Content-Length": excelBuffer.length.toString(),
+      },
+    });
   } catch (error) {
     console.error("Error generating Excel report:", error);
     const message = error instanceof Error ? error.message : String(error);

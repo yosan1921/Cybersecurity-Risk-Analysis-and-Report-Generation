@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import { ReportExporter } from "@/components/ReportExporter";
 
 /* ---------------- Types for DOCX tab ---------------- */
 
@@ -253,13 +254,7 @@ export default function ReportsPage() {
                       onClick={() => handleViewDetails(assessment)}
                       className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition text-sm font-medium"
                     >
-                      View Details
-                    </button>
-                    <button
-                      onClick={() => handleGenerateReport(assessment)}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition text-sm font-medium"
-                    >
-                      Generate Report
+                      View & Export
                     </button>
                   </div>
                 </div>
@@ -303,109 +298,110 @@ export default function ReportsPage() {
 
             {/* Modal Content */}
             <div className="p-6 space-y-6">
-              {selectedAssessment.analyses.map((analysis, index) => (
-                <div
-                  key={index}
-                  className="border border-slate-700 rounded-lg p-4 space-y-3"
-                >
-                  <div>
-                    <p className="text-sm font-semibold text-slate-400 mb-1">
-                      Question {index + 1}
-                    </p>
-                    <p className="text-white font-medium">
-                      {analysis.question}
-                    </p>
-                  </div>
+              {/* Report Exporter */}
+              <ReportExporter
+                analysisId={selectedAssessment._id}
+                companyName={selectedAssessment.company}
+              />
 
-                  <div>
-                    <p className="text-sm font-semibold text-slate-400 mb-1">
-                      Answer
-                    </p>
-                    <p className="text-slate-300">{analysis.answer}</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* Analysis Details */}
+              <div>
+                <h3 className="text-lg font-bold text-white mb-4">Assessment Details</h3>
+                {selectedAssessment.analyses.map((analysis, index) => (
+                  <div
+                    key={index}
+                    className="border border-slate-700 rounded-lg p-4 space-y-3"
+                  >
                     <div>
-                      <p className="text-slate-400 mb-1">Likelihood</p>
+                      <p className="text-sm font-semibold text-slate-400 mb-1">
+                        Question {index + 1}
+                      </p>
                       <p className="text-white font-medium">
-                        {analysis.likelihood}/5
+                        {analysis.question}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-slate-400 mb-1">Impact</p>
-                      <p className="text-white font-medium">
-                        {analysis.impact}/5
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="text-slate-400 mb-1">Risk Score</p>
-                      <p className="text-white font-medium">
-                        {analysis.riskScore}
+                      <p className="text-sm font-semibold text-slate-400 mb-1">
+                        Answer
                       </p>
+                      <p className="text-slate-300">{analysis.answer}</p>
                     </div>
-                    <div>
-                      <p className="text-slate-400 mb-1">Risk Level</p>
-                      <p
-                        className={`font-medium ${analysis.riskLevel === "CRITICAL"
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-slate-400 mb-1">Likelihood</p>
+                        <p className="text-white font-medium">
+                          {analysis.likelihood}/5
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-slate-400 mb-1">Impact</p>
+                        <p className="text-white font-medium">
+                          {analysis.impact}/5
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-slate-400 mb-1">Risk Score</p>
+                        <p className="text-white font-medium">
+                          {analysis.riskScore}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-slate-400 mb-1">Risk Level</p>
+                        <p
+                          className={`font-medium ${analysis.riskLevel === "CRITICAL"
                             ? "text-red-400"
                             : analysis.riskLevel === "HIGH"
                               ? "text-orange-400"
                               : analysis.riskLevel === "MEDIUM"
                                 ? "text-yellow-400"
                                 : "text-green-400"
-                          }`}
-                      >
-                        {analysis.riskLevel}
+                            }`}
+                        >
+                          {analysis.riskLevel}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-slate-400 mb-1">
+                        Gap
+                      </p>
+                      <p className="text-slate-300 text-sm">{analysis.gap}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-slate-400 mb-1">
+                        Threat
+                      </p>
+                      <p className="text-slate-300 text-sm">{analysis.threat}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-slate-400 mb-1">
+                        Mitigation
+                      </p>
+                      <p className="text-slate-300 text-sm">
+                        {analysis.mitigation}
                       </p>
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  <div>
-                    <p className="text-sm font-semibold text-slate-400 mb-1">
-                      Gap
-                    </p>
-                    <p className="text-slate-300 text-sm">{analysis.gap}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-slate-400 mb-1">
-                      Threat
-                    </p>
-                    <p className="text-slate-300 text-sm">{analysis.threat}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-slate-400 mb-1">
-                      Mitigation
-                    </p>
-                    <p className="text-slate-300 text-sm">
-                      {analysis.mitigation}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-slate-800 border-t border-slate-700 p-6 flex space-x-3">
-              <button
-                onClick={closeModal}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition font-medium"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  handleGenerateReport(selectedAssessment);
-                  closeModal();
-                }}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition font-medium"
-              >
-                Generate Report
-              </button>
+              {/* Modal Footer */}
+              <div className="sticky bottom-0 bg-slate-800 border-t border-slate-700 p-6 flex space-x-3">
+                <button
+                  onClick={closeModal}
+                  className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition font-medium"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
