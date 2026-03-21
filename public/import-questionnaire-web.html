@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import INSA Questionnaire - CSRARS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        .info-box {
+            background: #0f172a;
+            border-left: 4px solid #60a5fa;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-box p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .success {
+            background: #064e3b;
+            border-left-color: #10b981;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .success h3 {
+            color: #10b981;
+        }
+
+        .error {
+            background: #7f1d1d;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .error h3 {
+            color: #ef4444;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📋 Import INSA Questionnaire</h1>
+        <p class="subtitle">Cyber Security Risk Assessment Checklist - 10 Sections, 58 Questions</p>
+
+        <div class="info-box">
+            <h3>ℹ️ About This Import</h3>
+            <p>
+                This will import the official INSA Cyber Security Risk Assessment Checklist
+                (March 2024) into your CSRARS system. The questionnaire includes 58 operational-level
+                questions across 10 security domains.
+            </p>
+        </div>
+
+        <form id="importForm">
+            <div class="form-group">
+                <label for="company">Organization Name *</label>
+                <input type="text" id="company" required placeholder="e.g., Acme Corporation">
+            </div>
+
+            <div class="form-group">
+                <label for="filledBy">Filled By (Your Name) *</label>
+                <input type="text" id="filledBy" required placeholder="e.g., John Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="role">Your Role *</label>
+                <input type="text" id="role" required placeholder="e.g., IT Security Manager">
+            </div>
+
+            <div class="form-group">
+                <label for="filledDate">Assessment Date *</label>
+                <input type="date" id="filledDate" required>
+            </div>
+
+            <button type="submit" id="submitBtn">
+                Import Questionnaire
+            </button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('filledDate').valueAsDate = new Date();
+
+        document.getElementById('importForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Importing...';
+            resultDiv.innerHTML = '<div class="loading">⏳ Importing questionnaire...</div>';
+
+            try {
+                // Load the template
+                const templateResponse = await fetch('/questionnaire-template.json');
+                const template = await templateResponse.json();
+
+                // Prepare metadata
+                const metadata = {
+                    company: document.getElementById('company').value,
+                    filledBy: document.getElementById('filledBy').value,
+                    role: document.getElementById('role').value,
+                    filledDate: document.getElementById('filledDate').value
+                };
+
+                // Import via API
+                const response = await fetch('/api/questionnaires/import', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ template, metadata })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Import Successful!</h3>
+                            <p style="color: #86efac; margin-top: 0.5rem;">
+                                <strong>Questionnaire ID:</strong> ${data.questionnaire._id}<br>
+                                <strong>Title:</strong> ${data.questionnaire.title}<br>
+                                <strong>Questions:</strong> ${data.questionnaire.questionCount}<br>
+                                <strong>Sections:</strong> ${data.questionnaire.sectionCount}<br><br>
+                                Navigate to the <strong>Assessment</strong> page to view and fill out the questionnaire.
+                            </p>
+                        </div>
+                    `;
+                    document.getElementById('importForm').reset();
+                } else {
+                    throw new Error(data.error || 'Import failed');
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Import Failed</h3>
+                        <p style="color: #fca5a5; margin-top: 0.5rem;">
+                            ${error.message}
+                        </p>
+                    </div>
+                `;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Import Questionnaire';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import External Questionnaire - CSRARS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .info-box {
+            background: #0f172a;
+            border-left: 4px solid #60a5fa;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-box p,
+        .info-box ul {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .info-box ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #334155;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #e2e8f0;
+        }
+
+        .tab.active {
+            color: #60a5fa;
+            border-bottom-color: #60a5fa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 2px dashed #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: #60a5fa;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        .success {
+            background: #064e3b;
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .success h3 {
+            color: #10b981;
+        }
+
+        .error {
+            background: #7f1d1d;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .error h3 {
+            color: #ef4444;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #60a5fa;
+        }
+
+        .example-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .example-box pre {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📥 Import External Questionnaire</h1>
+        <p class="subtitle">Import questionnaires from other systems with or without answers</p>
+
+        <div class="info-box">
+            <h3>ℹ️ Supported Formats</h3>
+            <ul>
+                <li><strong>With Answers:</strong> Import completed questionnaires from external systems</li>
+                <li><strong>Without Answers:</strong> Import question templates to be filled out later</li>
+                <li><strong>Format:</strong> JSON with sections and questions</li>
+            </ul>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('paste')">📋 Paste JSON</button>
+            <button class="tab" onclick="switchTab('upload')">📁 Upload File</button>
+            <button class="tab" onclick="switchTab('example')">📖 Example</button>
+        </div>
+
+        <!-- Paste JSON Tab -->
+        <div id="paste-tab" class="tab-content active">
+            <form id="pasteForm">
+                <div class="form-group">
+                    <label for="jsonInput">Paste JSON Questionnaire:</label>
+                    <textarea id="jsonInput" placeholder='Paste your JSON here...'></textarea>
+                </div>
+                <button type="submit" id="pasteBtn">Import Questionnaire</button>
+            </form>
+        </div>
+
+        <!-- Upload File Tab -->
+        <div id="upload-tab" class="tab-content">
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="fileInput">Upload JSON File:</label>
+                    <input type="file" id="fileInput" accept=".json" />
+                </div>
+                <button type="submit" id="uploadBtn">Import Questionnaire</button>
+            </form>
+        </div>
+
+        <!-- Example Tab -->
+        <div id="example-tab" class="tab-content">
+            <div class="info-box">
+                <h3>📖 JSON Format Example</h3>
+                <p>Use this format for importing questionnaires:</p>
+            </div>
+            <div class="example-box">
+                <pre>{
+  "title": "Security Assessment Q1 2024",
+  "company": "Acme Corporation",
+  "filledBy": "John Doe",
+  "role": "IT Security Manager",
+  "filledDate": "2024-03-07",
+  "sections": [
+    {
+      "sectionTitle": "Physical Security Controls",
+      "questions": [
+        {
+          "questionText": "Are all data center entry points protected?",
+          "answer": "Yes"
+        },
+        {
+          "questionText": "Is CCTV installed in critical areas?",
+          "answer": "Partially Implemented"
+        }
+      ]
+    },
+    {
+      "sectionTitle": "Network Security",
+      "questions": [
+        {
+          "questionText": "Is the network properly segmented?",
+          "answer": "No"
+        }
+      ]
+    }
+  ]
+}</pre>
+            </div>
+            <div class="info-box" style="margin-top: 1rem;">
+                <h3>💡 Tips</h3>
+                <ul>
+                    <li>The <code>answer</code> field is optional - omit it for templates</li>
+                    <li>Valid answers: "Yes", "No", "Partially Implemented", "Not Applicable"</li>
+                    <li>You can add a <code>level</code> field: "operational", "tactical", or "strategic"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Handle paste form
+        document.getElementById('pasteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const jsonInput = document.getElementById('jsonInput').value;
+            await importQuestionnaire(jsonInput, 'pasteBtn');
+        });
+
+        // Handle upload form
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showError('Please select a file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                await importQuestionnaire(e.target.result, 'uploadBtn');
+            };
+            reader.readAsText(file);
+        });
+
+        async function importQuestionnaire(jsonString, buttonId) {
+            const submitBtn = document.getElementById(buttonId);
+            const resultDiv = document.getElementById('result');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Importing...';
+            resultDiv.innerHTML = '<div class="loading">⏳ Importing questionnaire...</div>';
+
+            try {
+                // Parse JSON
+                const questionnaire = JSON.parse(jsonString);
+
+                // Import via API
+                const response = await fetch('/api/questionnaires/import-external', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ questionnaire })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Import Successful!</h3>
+                            <p style="color: #86efac; margin-top: 0.5rem;">
+                                <strong>Questionnaire ID:</strong> ${data.questionnaire._id}<br>
+                                <strong>Title:</strong> ${data.questionnaire.title}<br>
+                                <strong>Company:</strong> ${data.questionnaire.company}<br>
+                                <strong>Questions:</strong> ${data.questionnaire.questionCount}<br>
+                                <strong>Sections:</strong> ${data.questionnaire.sectionCount}<br>
+                                <strong>Has Answers:</strong> ${data.questionnaire.hasAnswers ? 'Yes' : 'No'}<br>
+                                <strong>Status:</strong> ${data.questionnaire.status}<br><br>
+                                Navigate to the <strong>Assessment</strong> page to view the questionnaire.
+                            </p>
+                        </div>
+                    `;
+                    // Clear forms
+                    document.getElementById('jsonInput').value = '';
+                    document.getElementById('fileInput').value = '';
+                } else {
+                    throw new Error(data.error || 'Import failed');
+                }
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Import Questionnaire';
+            }
+        }
+
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="error">
+                    <h3>❌ Import Failed</h3>
+                    <p style="color: #fca5a5; margin-top: 0.5rem;">
+                        ${message}
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>
